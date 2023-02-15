@@ -1,28 +1,21 @@
-// variable declaration
 const express = require("express");
 const ejs = require("ejs");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const app = express();
 const _ = require('lodash')
-// requiring data module
 const day = require("./date");
-
-// app set and use
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// connecting to mongodb
 mongoose.set("strictQuery", true);
-mongoose.connect("mongodb://127.0.0.1:27017/DEMODB");
+mongoose.connect("mongodb+srv://Sushant:OeOB2VZP51I2Pv7c@cluster0.qa7jwv3.mongodb.net/To-Do-List");
 
-// constructing itemsSchema
 const itemsSchema = {
   name: String,
 };
 
-// making Item model
 const Item = mongoose.model("Item", itemsSchema);
 
 const item1 = new Item({ name: "Sushant" });
@@ -58,7 +51,6 @@ app.get("/:customListName", (req, res) => {
   List.findOne({ name: customListName }, (err, foundlist) => {
     if (!err) {
       if (!foundlist) {
-        // console.log('not Found')
         const list = new List({
           name: customListName,
           items: defaultItems,
@@ -95,7 +87,6 @@ app.post('/',(req,res)=>{
 app.post("/delete", (req, res) => {
   const itemId = req.body.checkbox;
   const listName = req.body.listName;
-  console.log(itemId,listName)
   if(listName==='Today'){
     Item.findByIdAndRemove(itemId, (error) => {
       if (error) {
